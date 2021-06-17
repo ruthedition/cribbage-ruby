@@ -4,10 +4,11 @@ def calculatePoints(combinations)
   combinations.each do |combo|
     points += pointsForFlush(combo)
     points += pointsForPairs(combo)
+    points += pointsForRuns(combo)
     score[points] = combo
     points = 0
   end 
-   puts score.to_s
+  puts "The best hand is #{score[score.keys.max]} and is worth #{score.keys.max} points"
 end 
 
 def pointsForFlush(combo)
@@ -43,6 +44,45 @@ def pointsForPairs(combo)
   return points 
 end 
 
-cards = ['7C', '5C', '10C', '10C', '10C','10D']
+def pointsForRuns(combo)
+  points = 0   
+  comboNumbers = combo.map do |card|
+    current = card.chop.to_i
+  end.sort
+
+  runList = []
+  comboNumbers.map do |num|
+    current = num
+    if runList.length == 0
+      runList.push([current])
+    else 
+      last = runList.last.last
+      if current - last < 2
+        runList.last.push(current)
+      else 
+        runList.push([current])
+      end 
+    end 
+  end 
+
+  filtered = runList.filter { |run| run.length > 2}.flatten
+  filteredUnique = filtered.uniq.length  
+
+  if filtered.uniq.length >= 3 
+    if filtered.length == 4
+      if filtered.uniq.length == 4
+        points = 4
+      elsif filtered.uniq.length == 3 
+        points = 6
+      end 
+    else 
+      points = 3
+    end 
+  end 
+ 
+  return points 
+end 
+
+cards = ['7C', '8H', '8C', '9C', '1C','10D']
 combinations = cards.permutation(4).to_a
 calculatePoints(combinations)
