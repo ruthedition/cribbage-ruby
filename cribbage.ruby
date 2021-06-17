@@ -5,6 +5,7 @@ def calculatePoints(combinations)
     points += pointsForFlush(combo)
     points += pointsForPairs(combo)
     points += pointsForRuns(combo)
+    points += pointsForCombo15(combo)
     score[points] = combo
     points = 0
   end 
@@ -83,6 +84,49 @@ def pointsForRuns(combo)
   return points 
 end 
 
-cards = ['7C', '8H', '8C', '9C', '1C','10D']
+def pointsForCombo15(combo)
+  points = 0
+  above8 = combo.all? {|card| card.chop.to_i >= 8}
+
+  if !above8
+    possibleSums = Hash.new(0)
+    combo.each do |card|
+      possibleSums[card.chop] += 1
+    end 
+
+    
+    possibleSums.keys.each do |key|
+      total = key.to_i 
+      diff = 15 - total
+
+      if possibleSums[diff.to_s] == 2 && possibleSums[key] == 2
+        return points + 4
+      end 
+      
+      while diff > 0 
+        if diff.to_s != key  && possibleSums[diff.to_s] > 0 && possibleSums[key] > 0
+          total = total + diff
+          if total == 15
+            if possibleSums[key] == 2 || possibleSums[diff.to_s] == 2
+              points += 4
+            else
+              points += 2
+            end
+          end            
+          possibleSums[diff.to_s] -= 1
+          diff = 15 - total  
+        else 
+          diff -= 1
+        end 
+      end  
+    end 
+  end
+  puts points
+
+  return points
+end 
+
+
+cards = ['7S', '5C', '5H', '9S', '1C','10D']
 combinations = cards.permutation(4).to_a
 calculatePoints(combinations)
