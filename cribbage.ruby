@@ -1,4 +1,4 @@
-def calculatePoints(combinations)
+def calculatePoints(combinations) 
   points = 0
   score = Hash.new(0)
   combinations.each do |combo|
@@ -9,6 +9,11 @@ def calculatePoints(combinations)
     score[points] = combo
     points = 0
   end 
+  
+  score[score.keys.max].sort_by! do |card|
+    card.chop.to_i
+  end
+
   puts "The best hand is #{score[score.keys.max]} and is worth #{score.keys.max} points"
 end 
 
@@ -121,12 +126,26 @@ def pointsForCombo15(combo)
       end  
     end 
   end
-  puts points
-
   return points
 end 
 
 
-cards = ['7S', '5C', '5H', '9S', '1C','10D']
-combinations = cards.permutation(4).to_a
-calculatePoints(combinations)
+cards1 = (['7S', '5C', '5H', '10S', '1C','10D']) # good 
+cards2 = (['7C', '8H', '8C', '9D', '1C','10D']) #good 
+cards3 = (['7C', '8H', '8C', '9C', '1C','10C']) #good 
+cards4 = (['1C', '4H', '12C', '13C', '11D','8C']) #bad (4 flush)
+cards5 = (['1C', '4C', '12C', '13C', '11D','8C']) #bad (4 flush)
+cards6 = (['4H', '4C', '4D', '4S', '11D','8C']) #bad (all pairs) 
+cards7 = (['7H', '8C', '8D', '9S', '8H','9H']) #good
+cards8 = (['1S', '13S', '12D', '9S', '5H','9H']) #good 
+cards9 = (['1S', '13S', '12D', '9S', '5H','2H']) #good
+
+# calculatePoints(cards1.permutation(4).to_a)
+# calculatePoints(cards2.permutation(4).to_a)
+# calculatePoints(cards3.permutation(4).to_a)
+calculatePoints(cards4.permutation(4).to_a)
+calculatePoints(cards5.permutation(4).to_a)
+calculatePoints(cards6.permutation(4).to_a)
+#calculatePoints(cards7.permutation(4).to_a)
+#calculatePoints(cards8.permutation(4).to_a)
+#calculatePoints(cards9.permutation(4).to_a)
