@@ -19,7 +19,7 @@ class PointHelper
   
   end 
   
-  def points_for_flush(combo)
+  def self.points_for_flush(combo)
     points = 0
     suits = Hash.new(0)
     combo.each do |card|
@@ -31,7 +31,7 @@ class PointHelper
     return points 
   end 
   
-  def points_for_pairs(combo)
+  def self.points_for_pairs(combo)
     points = 0 
     pairs = Hash.new(0)
     combo.each do |card|
@@ -52,7 +52,7 @@ class PointHelper
     return points 
   end 
   
-  def points_for_runs(combo)
+  def self.points_for_runs(combo)
     points = 0   
     combo_numbers = combo.map do |card|
       current = card.chop.to_i
@@ -91,7 +91,7 @@ class PointHelper
     return points 
   end 
   
-  def points_for_combo15(combo)
+  def self.points_for_combo15(combo)
     combo.sort_by!{ |card| card.chop.to_i}
     points = 0
     above8 = combo.all? {|card| card.chop.to_i >= 8}
@@ -112,7 +112,6 @@ class PointHelper
         end 
         
         while diff > 0 
-          puts " diff is #{diff}"
           if diff.to_s != key  && possible_sums[diff.to_s] > 0 && possible_sums[key] > 0
             possible_sums[diff.to_s] -= 1
             total = total + diff
