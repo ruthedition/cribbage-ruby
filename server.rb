@@ -10,7 +10,7 @@ end
 
 before do 
   content_type :json
-  response.headers['Access-Control-Allow-Origin'] = "*"
+  response.headers['Access-Control-Allow-Origin'] = ENV["REACT_URL"]
 end 
 
 post '/besthand' do
@@ -22,7 +22,7 @@ end
 options "*" do
   response.headers["Allow"] = "GET, PUT, POST, DELETE, OPTIONS"
   response.headers["Access-Control-Allow-Headers"] = "Authorization, Content-Type, Accept, X-User-Email, X-Auth-Token"
-  response.headers["Access-Control-Allow-Origin"] = "*"
+  response.headers["Access-Control-Allow-Origin"] = ENV["REACT_URL"]
   200
 end
 
