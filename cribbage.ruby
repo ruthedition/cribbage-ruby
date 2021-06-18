@@ -1,11 +1,11 @@
-def calculatePoints(combinations) 
+def calculate_points(combinations) 
   points = 0
   score = Hash.new(0)
   combinations.each do |combo|
-     points += pointsForFlush(combo)
-    points += pointsForPairs(combo)
-    points += pointsForRuns(combo)
-    points += pointsForCombo15(combo)
+     points += points_for_flush(combo)
+    points += points_for_pairs(combo)
+    points += points_for_runs(combo)
+    points += points_for_combo15(combo)
     score[points] = combo
     points = 0
   end 
@@ -16,7 +16,7 @@ def calculatePoints(combinations)
   puts "The best hand is #{score[score.keys.max]} and is worth #{score.keys.max} points"
 end 
 
-def pointsForFlush(combo)
+def points_for_flush(combo)
   points = 0
   suits = Hash.new(0)
   combo.each do |card|
@@ -28,7 +28,7 @@ def pointsForFlush(combo)
   return points 
 end 
 
-def pointsForPairs(combo)
+def points_for_pairs(combo)
   points = 0 
   pairs = Hash.new(0)
   combo.each do |card|
@@ -39,39 +39,39 @@ def pointsForPairs(combo)
   when 3
     points = 2    
   when 2
-    points = 6
+   triple = pairs.values.any?{|value| value == 3}
+   points = triple ? 6 : 4
   when 1
     points = 12
   else 
     points = 0
   end 
-
   return points 
 end 
 
-def pointsForRuns(combo)
+def points_for_runs(combo)
   points = 0   
-  comboNumbers = combo.map do |card|
+  combo_numbers = combo.map do |card|
     current = card.chop.to_i
   end.sort
 
-  runList = []
-  comboNumbers.map do |num|
+  run_list = []
+  combo_numbers.map do |num|
     current = num
-    if runList.length == 0
-      runList.push([current])
+    if run_list.length == 0
+      run_list.push([current])
     else 
-      last = runList.last.last
+      last = run_list.last.last
       if current - last < 2
-        runList.last.push(current)
+        run_list.last.push(current)
       else 
-        runList.push([current])
+        run_list.push([current])
       end 
     end 
   end 
 
-  filtered = runList.filter { |run| run.length > 2}.flatten
-  filteredUnique = filtered.uniq.length  
+  filtered = run_list.filter { |run| run.length > 2}.flatten
+  filtered_unique = filtered.uniq.length  
 
   if filtered.uniq.length >= 3 
     if filtered.length == 4
@@ -88,34 +88,34 @@ def pointsForRuns(combo)
   return points 
 end 
 
-def pointsForCombo15(combo)
+def points_for_combo15(combo)
   combo.sort_by!{ |card| card.chop.to_i}
   points = 0
   above8 = combo.all? {|card| card.chop.to_i >= 8}
 
   if !above8
-    possibleSums = Hash.new(0)
+    possible_sums = Hash.new(0)
     combo.each do |card|
-      possibleSums[card.chop] += 1
+      possible_sums[card.chop] += 1
     end 
 
     
-    possibleSums.keys.each do |key|
+    possible_sums.keys.each do |key|
       total = key.to_i 
       diff = 15 - total
 
-      if possibleSums[diff.to_s] == 2 && possibleSums[key] == 2
+      if possible_sums[diff.to_s] == 2 && possible_sums[key] == 2
         return points + 4
       end 
       
       while diff > 0 
-        if diff.to_s != key  && possibleSums[diff.to_s] > 0 && possibleSums[key] > 0
-          possibleSums[diff.to_s] -= 1
+        if diff.to_s != key  && possible_sums[diff.to_s] > 0 && possible_sums[key] > 0
+          possible_sums[diff.to_s] -= 1
           total = total + diff
           
           diff = 15 - total  
           if total == 15
-            if possibleSums[key] == 2 || possibleSums[diff.to_s] == 2
+            if possible_sums[key] == 2 || possible_sums[diff.to_s] == 2
               points += 4
             else
               points += 2
@@ -128,6 +128,10 @@ def pointsForCombo15(combo)
       end  
     end 
   end
+  puts " #{combo} and #{points}" 
+  
+
+
   return points
 end 
 
@@ -142,12 +146,12 @@ cards7 = (['7H', '8C', '8D', '9S', '8H','9H']) #good
 cards8 = (['1S', '13S', '12D', '9S', '5H','9H']) #good 
 cards9 = (['1S', '13S', '12D', '9S', '5H','2H']) #good
 
-calculatePoints(cards1.permutation(4).to_a)
-calculatePoints(cards2.permutation(4).to_a)
-calculatePoints(cards3.permutation(4).to_a)
-calculatePoints(cards4.permutation(4).to_a)
-calculatePoints(cards5.permutation(4).to_a)
-calculatePoints(cards6.permutation(4).to_a)
-calculatePoints(cards7.permutation(4).to_a)
-calculatePoints(cards8.permutation(4).to_a)
-calculatePoints(cards9.permutation(4).to_a)
+calculate_points(cards1.permutation(4).to_a)
+# calculate_points(cards2.permutation(4).to_a)
+# calculate_points(cards3.permutation(4).to_a)
+# calculate_points(cards4.permutation(4).to_a)
+# calculate_points(cards5.permutation(4).to_a)
+# calculate_points(cards6.permutation(4).to_a)
+# calculate_points(cards7.permutation(4).to_a)
+# calculate_points(cards8.permutation(4).to_a)
+# calculate_points(cards9.permutation(4).to_a)
